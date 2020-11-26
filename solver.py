@@ -20,6 +20,45 @@ class solver:
         return []
 
 
+    def findDisappearedNumbers(self, nums):
+        """
+        https://leetcode.com/problems/find-all-numbers-disappeared-in-an-array/
+        Given an array of integers where 1 ≤ a[i] ≤ n (n = size of array),
+        some elements appear twice and others appear once.
+        Find all the elements of [1, n] inclusive that do not appear in this array.
+
+        :type nums: List[int]
+        :rtype: List[int]
+        """
+        return set(range(1,len(nums)+1)) - set(nums)
+
+
+    def majorityElement(nums):
+        """
+        https://leetcode.com/problems/majority-element/
+        Given an array of size n, find the majority element.
+        The majority element is the element that appears more than ⌊ n/2 ⌋ times.
+
+        :type nums: List[int]
+        :rtype: int
+        """
+        return max(set(nums), key=nums.count)
+
+
+    def moveZeroes(nums):
+        """
+        https://leetcode.com/problems/move-zeroes/
+        Given an array nums, write a function to move all 0's
+        to the end of it while maintaining the relative order of the non-zero elements.
+
+        :type nums: List[int]
+        :rtype: None Do not return anything, modify nums in-place instead.
+        """
+        for i in range(len(nums)):
+            if nums[i] == 0:
+                nums.append(nums.pop(nums.index(nums[i])))
+
+
     def singleNumber(nums):
         """
         https://leetcode.com/problems/single-number/
