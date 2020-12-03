@@ -20,7 +20,7 @@ class solver:
         return []
 
 
-    def findDisappearedNumbers(self, nums):
+    def findDisappearedNumbers(nums):
         """
         https://leetcode.com/problems/find-all-numbers-disappeared-in-an-array/
         Given an array of integers where 1 ≤ a[i] ≤ n (n = size of array),
@@ -101,7 +101,7 @@ class solver:
 #     def __init__(self, val=0, next=None):
 #         self.val = val
 #         self.next = next
-    def addTwoNumbers(l1, l2, c = 0):
+    def addTwoNumbers(self, l1, l2, c = 0):
         """
         https://leetcode.com/problems/add-two-numbers/
         Given two non-empty linked lists representing two non-negative integers.
@@ -142,6 +142,51 @@ class solver:
         return p
 
 
+    def mergeTwoLists(self, l1, l2):
+        """
+        https://leetcode.com/problems/merge-two-sorted-lists/
+        Merge two sorted linked lists and return it as a new sorted list.
+        The new list should be made by splicing together the nodes of the first two lists.
+
+        :type l1: ListNode
+        :type l2: ListNode
+        :rtype: ListNode
+        """
+        if l1 is None:
+            return l2
+        elif l2 is None:
+            return l1
+        elif l1.val < l2.val:
+            l1.next = self.mergeTwoLists(l1.next, l2)
+            return l1
+        else:
+            l2.next = self.mergeTwoLists(l1, l2.next)
+            return l2
+
+    def maxProfit(prices):
+        """
+        https://leetcode.com/problems/best-time-to-buy-and-sell-stock/
+        Say you have an array for which the ith element is the price of a given stock on day i.
+        If you were only permitted to complete at most one transaction (i.e.,
+        buy one and sell one share of the stock), design an algorithm to find the maximum profit.
+        Note that you cannot sell a stock before you buy one.
+
+        :type prices: List[int]
+        :rtype: int
+        """
+        if not prices:
+            return 0
+
+        min_price = prices[0]
+        max_profit = 0
+
+        for i, v in enumerate(prices):
+            if v < min_price:
+                min_price = v
+            elif v - min_price > max_profit:
+                max_profit = v - min_price
+
+        return max_profit
 # Definition for a binary tree node.
 # class TreeNode(object):
 #     def __init__(self, val=0, left=None, right=None):
