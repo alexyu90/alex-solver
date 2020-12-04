@@ -19,6 +19,7 @@ Currently including solutions to:
 - Problem 226: ["Invert Binary Tree"](https://leetcode.com/problems/invert-binary-tree/)
 - Problem 283: ["Move Zeros"](https://leetcode.com/problems/move-zeroes/)
 - Problem 448: ["Find All Numbers Disappeared in an Array"](https://leetcode.com/problems/find-all-numbers-disappeared-in-an-array/)
+- Problem 543: ["Diameter of Binary Tree"](https://leetcode.com/problems/diameter-of-binary-tree/)
 - Problem 617: ["Merge Two Binary Trees](https://leetcode.com/problems/merge-two-binary-trees/)
 
 

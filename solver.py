@@ -1,4 +1,4 @@
-class solver:
+class solver(object):
 
     def twoSum(nums, target):
         """
@@ -96,6 +96,32 @@ class solver:
         return maxlength
 
 
+    def maxProfit(prices):
+        """
+        https://leetcode.com/problems/best-time-to-buy-and-sell-stock/
+        Say you have an array for which the ith element is the price of a given stock on day i.
+        If you were only permitted to complete at most one transaction (i.e.,
+        buy one and sell one share of the stock), design an algorithm to find the maximum profit.
+        Note that you cannot sell a stock before you buy one.
+
+        :type prices: List[int]
+        :rtype: int
+        """
+        if not prices:
+            return 0
+
+        min_price = prices[0]
+        max_profit = 0
+
+        for i, v in enumerate(prices):
+            if v < min_price:
+                min_price = v
+            elif v - min_price > max_profit:
+                max_profit = v - min_price
+
+        return max_profit
+
+
 # Definition for singly-linked list.
 # class ListNode(object):
 #     def __init__(self, val=0, next=None):
@@ -163,30 +189,7 @@ class solver:
             l2.next = self.mergeTwoLists(l1, l2.next)
             return l2
 
-    def maxProfit(prices):
-        """
-        https://leetcode.com/problems/best-time-to-buy-and-sell-stock/
-        Say you have an array for which the ith element is the price of a given stock on day i.
-        If you were only permitted to complete at most one transaction (i.e.,
-        buy one and sell one share of the stock), design an algorithm to find the maximum profit.
-        Note that you cannot sell a stock before you buy one.
 
-        :type prices: List[int]
-        :rtype: int
-        """
-        if not prices:
-            return 0
-
-        min_price = prices[0]
-        max_profit = 0
-
-        for i, v in enumerate(prices):
-            if v < min_price:
-                min_price = v
-            elif v - min_price > max_profit:
-                max_profit = v - min_price
-
-        return max_profit
 # Definition for a binary tree node.
 # class TreeNode(object):
 #     def __init__(self, val=0, left=None, right=None):
@@ -232,6 +235,31 @@ class solver:
             left_h = self.maxDepth(root.left)
             right_h = self.maxDepth(root.right)
             return max(left_h, right_h) + 1
+
+
+    def diameterOfBinaryTree(self, root):
+        """
+        https://leetcode.com/problems/diameter-of-binary-tree/
+        Given a binary tree, you need to compute the length of the diameter of the tree.
+        The diameter of a binary tree is the length of the longest path between
+        any two nodes in a tree. This path may or may not pass through the root.
+
+        :type root: TreeNode
+        :rtype: int
+        """
+
+        self.path_bt_nodes = 0
+        def depth(root):
+            if not root: return 0
+            left = depth(root.left)
+            right = depth(root.right)
+            # path
+            self.path_bt_nodes = max(self.path_bt_nodes, left + right)
+            # depth
+            return max(left, right) + 1
+
+        depth(root)
+        return self.path_bt_nodes
 
 
     def invertTree(self, root):
