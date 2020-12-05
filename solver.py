@@ -20,6 +20,32 @@ class solver(object):
         return []
 
 
+    def threeSum(self, nums):
+        """
+        https://leetcode.com/problems/3sum/
+        Given an array nums of n integers, are there elements a, b, c in nums
+        such that a + b + c = 0? Find all unique triplets in the array which
+        gives the sum of zero.
+        Notice that the solution set must not contain duplicate triplets.
+
+        :type nums: List[int]
+        :rtype: List[List[int]]
+        """
+        trip_list = set()
+        duplicates = set()
+        seen = {}
+
+        for i, v1 in enumerate(nums):
+            if v1 not in duplicates:
+                duplicates.add(v1)
+                for j, v2 in enumerate(nums[i+1:]):
+                    temp = -(v1+v2)
+                    if temp in seen and seen[temp] == i:
+                        trip_list.add(tuple(sorted((v1,v2,temp))))
+                    seen[v2] = i
+        return trip_list
+
+
     def maxSubArray(self, nums):
         """
         https://leetcode.com/problems/maximum-subarray/
@@ -91,7 +117,6 @@ class solver(object):
         """
         l = len(nums)
         ans = [1] * l
-        ans[0] = 1
         for i in range(1, l):
             ans[i] = ans[i-1]*nums[i-1]
 
