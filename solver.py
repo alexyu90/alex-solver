@@ -20,6 +20,25 @@ class solver(object):
         return []
 
 
+    def maxSubArray(self, nums):
+        """
+        https://leetcode.com/problems/maximum-subarray/
+        Given an integer array nums, find the contiguous subarray (containing at
+        least one number) which has the largest sum and return its sum.
+
+        :type nums: List[int]
+        :rtype: int
+        """
+        n = len(nums)
+        curr_sum = max_sum = nums[0]
+
+        for i in range(1, n):
+            curr_sum = max(nums[i], curr_sum+nums[i])
+            max_sum = max(max_sum, curr_sum)
+
+        return max_sum
+
+
     def findDisappearedNumbers(nums):
         """
         https://leetcode.com/problems/find-all-numbers-disappeared-in-an-array/
@@ -59,6 +78,31 @@ class solver(object):
                 nums.append(nums.pop(nums.index(nums[i])))
 
 
+    def productExceptSelf(self, nums):
+        """
+        https://leetcode.com/problems/product-of-array-except-self/
+        Given an array nums of n integers where n > 1,  return an array output
+        such that output[i] is equal to the product of all the elements of nums
+        except nums[i].
+        Note: Please solve it without division and in O(n).
+
+        :type nums: List[int]
+        :rtype: List[int]
+        """
+        l = len(nums)
+        ans = [1] * l
+        ans[0] = 1
+        for i in range(1, l):
+            ans[i] = ans[i-1]*nums[i-1]
+
+        r = 1
+        for i in range(l-1, -1, -1):
+            ans[i] = ans[i] * r
+            r *= nums[i]
+
+        return ans
+
+
     def singleNumber(nums):
         """
         https://leetcode.com/problems/single-number/
@@ -85,15 +129,45 @@ class solver(object):
         dicts = {}
         maxlength = start = 0
         for i,value in enumerate(s):
+            # decide where to start (think of "abba")
             if value in dicts:
-                sums = dicts[value] + 1
-                if sums > start:
-                    start = sums
+                start = max(start, dicts[value] + 1)
+            # current length of substring
             num = i - start + 1
-            if num > maxlength:
-                maxlength = num
+            # update maxlength
+            maxlength = max(maxlength, num)
+            # record latest index of this letter
             dicts[value] = i
         return maxlength
+
+
+    def longestPalindrome(self, s):
+        """
+        https://leetcode.com/problems/longest-palindromic-substring/
+        Given a string s, return the longest palindromic substring in s.
+
+        :type s: str
+        :rtype: str
+        """
+        self.maxLength = 1
+        self.start = 0
+
+        def expand(self,low, high):
+            while low >= 0 and high < len(s) and s[low] == s[high]:
+                if high - low + 1 > self.maxLength:
+                    self.start = low
+                    self.maxLength = high - low + 1
+                low -= 1
+                high += 1
+
+        # expand from every character as center point
+        for i in range(1, len(s)):
+            # Find the longest even length palindrome with center points i-1 and i.
+            expand(self,i-1,i)
+            # Find the longest odd length palindrome with center point i
+            expand(self,i-1,i+1)
+
+        return s[self.start:self.start + self.maxLength]
 
 
     def maxProfit(prices):
@@ -120,6 +194,120 @@ class solver(object):
                 max_profit = v - min_price
 
         return max_profit
+
+
+    def climbStairs(n):
+        """
+        https://leetcode.com/problems/climbing-stairs/
+        You are climbing a staircase. It takes n steps to reach the top.
+        Each time you can either climb 1 or 2 steps.
+        In how many distinct ways can you climb to the top?
+
+        :type n: int
+        :rtype: int
+        """
+        if (n == 1): return 1
+
+        first = 1
+        second = 2
+        for i in range(3,n+1):
+            third = first + second
+            first = second
+            second = third
+
+        return second
+
+
+    def rob(nums):
+        """
+        https://leetcode.com/problems/house-robber/
+        You are a professional robber planning to rob houses along a street.
+        Each house has a certain amount of money stashed, the only constraint
+        stopping you from robbing each of them is that adjacent houses have
+        security system connected and it will automatically contact the police
+        if two adjacent houses were broken into on the same night.
+
+        Given a list of non-negative integers representing the amount of money
+        of each house, determine the maximum amount of money you can rob tonight
+        without alerting the police.
+
+        :type nums: List[int]
+        :rtype: int
+        """
+        prev_max = 0
+        curr_max = 0
+        for i in range(len(nums)):
+            temp = curr_max
+            curr_max = max(prev_max + nums[i], curr_max)
+            prev_max = temp
+
+        return curr_max
+
+
+    def trap(height):
+        """
+        https://leetcode.com/problems/trapping-rain-water/
+        Given n non-negative integers representing an elevation map where the
+        width of each bar is 1, compute how much water it can trap after raining.
+
+        :type height: List[int]
+        :rtype: int
+        """
+        if not height:
+            return 0
+
+        ans = 0
+        size = len(height)
+        left_max = [0] * size
+        right_max = [0] * size
+        left_max[0] = height[0]
+        right_max[-1] = height[-1]
+        for i in range(1, size):
+            left_max[i] = max(height[i], left_max[i-1])
+
+        for i in range(size-2, -1, -1):
+            right_max[i] = max(height[i], right_max[i+1])
+
+        for i in range(size):
+            ans += min(left_max[i], right_max[i]) - height[i]
+        return ans
+
+
+    def numIslands(grid):
+        """
+        https://leetcode.com/problems/number-of-islands/
+        Given an m x n 2d grid map of '1's (land) and '0's (water),
+        return the number of islands.
+        An island is surrounded by water and is formed by connecting adjacent
+        lands horizontally or vertically. You may assume all four edges of
+        the grid are all surrounded by water.
+
+        :type grid: List[List[str]]
+        :rtype: int
+        """
+        nr = len(grid)
+        nc = len(grid[0])
+        num_islands = 0
+
+        def dfs(grid, r, c):
+            if (r < 0 or c < 0 or r >= nr or c >= nc or grid[r][c] == '0'):
+                return
+
+            grid[r][c] = '0'
+            dfs(grid, r-1, c)
+            dfs(grid, r+1, c)
+            dfs(grid, r, c-1)
+            dfs(grid, r, c+1)
+
+        if (not grid or len(grid) == 0): return 0
+
+        for r in range(nr):
+            for c in range(nc):
+                if (grid[r][c] == '1'):
+                    num_islands += 1
+                    dfs(grid, r, c)
+
+        return num_islands
 
 
 # Definition for singly-linked list.
@@ -273,3 +461,113 @@ class solver(object):
         if root:
             root.left, root.right = self.invertTree(root.right), self.invertTree(root.left)
         return root
+
+
+    def isSymmetric(self, root):
+        """
+        https://leetcode.com/problems/symmetric-tree/
+        Given a binary tree, check whether it is a mirror
+        of itself (ie, symmetric around its center).
+
+        :type root: TreeNode
+        :rtype: bool
+        """
+        return self.isMirror(root, root)
+
+
+    def isMirror(self, t1, t2):
+        """
+        helper function for isSymmetric
+        """
+        if not t1 and not t2: return True
+        if not t1 or not t2: return False
+        return t1.val == t2.val and self.isMirror(t1.right, t2.left) and self.isMirror(t1.left, t2.right)
+
+
+class MinStack(object):
+    """
+    https://leetcode.com/problems/min-stack/
+    Design a stack that supports push, pop, top, and retrieving the minimum
+    element in constant time.
+
+    push(x) -- Push element x onto stack.
+    pop() -- Removes the element on top of the stack.
+    top() -- Get the top element.
+    getMin() -- Retrieve the minimum element in the stack.
+    """
+    def __init__(self):
+        """
+        initialize your data structure here.
+        """
+        self.arr = []
+
+    def push(self, x):
+        """
+        :type x: int
+        :rtype: None
+        """
+        self.arr.append(x)
+
+    def pop(self):
+        """
+        :rtype: None
+        """
+        return self.arr.pop()
+
+    def top(self):
+        """
+        :rtype: int
+        """
+        return self.arr[-1]
+
+    def getMin(self):
+        """
+        :rtype: int
+        """
+        return min(self.arr)
+
+
+class LRUCache(object):
+    """
+    https://leetcode.com/problems/lru-cache/solution/
+    Design a data structure that follows the constraints of a
+    Least Recently Used (LRU) cache.
+    """
+
+    def __init__(self, capacity):
+        """
+        :type capacity: int
+        """
+        self.size = capacity
+        self.cache_dict = {}
+        self.LRU_dict = {}
+
+    def get(self, key):
+        """
+        :type key: int
+        :rtype: int
+        """
+        if key in self.cache_dict:
+            for key1, value1 in self.LRU_dict.items():
+                self.LRU_dict[key1] = value1 + 1
+            self.LRU_dict[key] = 1
+            return self.cache_dict[key]
+        else:
+            return -1
+
+    def put(self, key, value):
+        """
+        :type key: int
+        :type value: int
+        :rtype: None
+        """
+
+        for key1, value1 in self.LRU_dict.items():
+            self.LRU_dict[key1] = value1 + 1
+        self.cache_dict[key] = value
+        self.LRU_dict[key] = 1
+
+        if len(self.cache_dict) == self.size + 1:
+            max_key = max(self.LRU_dict, key=self.LRU_dict.get)
+            del self.cache_dict[max_key]
+            del self.LRU_dict[max_key]
